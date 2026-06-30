@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>★ CAMINHO MAIS BARATO ★ Capitais do Brasil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+  <!-- ===== TELA INICIAL (START) ===== -->
+  <div id="startScreen" class="start">
+    <div class="start-stars"></div>
+    <div class="start-content">
+      <h1 class="start-title">CAMINHO<br>MAIS&nbsp;BARATO</h1>
+      <div class="start-sub">★ CAPITAIS DO BRASIL ★</div>
+      <button id="startBtn" class="start-btn blink">▶ PRESS START ◀</button>
+      <div class="start-tip">insira a ficha e acelere!</div>
+    </div>
+    <div class="start-road">
+      <!-- carro que cruza a tela ao apertar start -->
+      <div class="car start-car" id="startCar"></div>
+    </div>
+  </div>
+
+  <!-- ===== MENU (revelado após o start) ===== -->
+  <main id="app" class="app-hidden">
+    <h1>CAMINHO MAIS BARATO</h1>
+    <div class="sub blink">▶ CAPITAIS DO BRASIL ◀</div>
+
+    <!-- BUSCA -->
+    <div class="window">
+      <div class="titlebar"><span>ROTA.EXE</span><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+      <div class="body">
+        <div class="grid">
+          <div>
+            <label>◆ ORIGEM</label>
+            <input id="origem" list="caps" placeholder="Selecione a capital...">
+          </div>
+          <div>
+            <label>◆ DESTINO</label>
+            <input id="destino" list="caps" placeholder="Selecione a capital...">
+          </div>
+          <div>
+            <label>⛽ COMBUSTÍVEL R$/L</label>
+            <input id="fuel" type="number" step="0.01" min="0" value="5.89">
+          </div>
+          <div>
+            <label>🚗 AUTONOMIA km/L</label>
+            <input id="auton" type="number" step="0.1" min="0.1" value="12">
+          </div>
+        </div>
+        <datalist id="caps"></datalist>
+        <button id="go">► CALCULAR ROTA ◄</button>
+      </div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="window" id="resWin" style="display:none">
+      <div class="titlebar"><span>RESULTADO.LOG</span><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+      <div class="body"><div id="result" class="result"></div></div>
+    </div>
+
+    <!-- GRAFO -->
+    <div class="window">
+      <div class="titlebar"><span>GRAFO.DAT</span><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+      <div class="body">
+        <details>
+          <summary>▼ Mostrar vértices e adjacências (Show)</summary>
+          <div id="show" style="margin-top:10px"></div>
+        </details>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Nuvem de fumaça que mascara a transição ===== -->
+  <div id="smokeScreen" class="smoke-screen" aria-hidden="true">
+    <span class="cloud c1"></span><span class="cloud c2"></span>
+    <span class="cloud c3"></span><span class="cloud c4"></span>
+    <span class="cloud c5"></span><span class="cloud c6"></span>
+  </div>
+
+<script type="module" src="script/ui/app.js"></script>
+</body>
+</html>

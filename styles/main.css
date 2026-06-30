@@ -1,0 +1,221 @@
+:root{
+  --bg:#1a1c2c; --panel:#29366f; --panel2:#3b5dc9; --accent:#ffcd75;
+  --good:#38b764; --bad:#ef7d57; --text:#f4f4f4; --shadow:#0d0e1a;
+  --road:#41a6f6; --asphalt:#2b2f44;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'VT323',monospace;
+  background:var(--bg);
+  background-image:
+    linear-gradient(rgba(13,14,26,.7) 2px,transparent 2px),
+    linear-gradient(90deg,rgba(13,14,26,.4) 2px,transparent 2px);
+  background-size:100% 4px,4px 100%;
+  color:var(--text);
+  min-height:100vh;
+  image-rendering:pixelated;
+  padding:20px;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+/* ===================== MENU ===================== */
+#app{display:flex;flex-direction:column;align-items:center;width:100%}
+.app-hidden{display:none}
+.app-reveal{animation:reveal .7s ease-out both}
+@keyframes reveal{
+  0%{opacity:0;transform:translateY(26px) scale(.97)}
+  100%{opacity:1;transform:none}
+}
+h1{
+  font-family:'Press Start 2P',monospace;
+  font-size:18px;line-height:1.6;text-align:center;
+  color:var(--accent);
+  text-shadow:3px 3px 0 var(--bad),6px 6px 0 var(--shadow);
+  margin:10px 0 4px;
+}
+.sub{font-size:22px;color:var(--road);letter-spacing:2px;margin-bottom:18px}
+.window{
+  background:var(--panel);
+  border:4px solid var(--shadow);
+  box-shadow:0 0 0 4px var(--panel2),8px 8px 0 var(--shadow);
+  width:100%;max-width:760px;margin-bottom:22px;
+}
+.titlebar{
+  background:var(--panel2);
+  font-family:'Press Start 2P',monospace;
+  font-size:10px;padding:8px 10px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:4px solid var(--shadow);
+}
+.titlebar .dots{display:flex;gap:5px}
+.dots span{width:11px;height:11px;display:block;border:2px solid var(--shadow)}
+.dots .r{background:var(--bad)} .dots .y{background:var(--accent)} .dots .g{background:var(--good)}
+.body{padding:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:20px;color:var(--accent);margin-bottom:4px}
+input,select{
+  width:100%;font-family:'VT323',monospace;font-size:20px;
+  background:var(--bg);color:var(--text);
+  border:3px solid var(--shadow);box-shadow:inset 3px 3px 0 rgba(0,0,0,.4);
+  padding:8px 10px;outline:none;
+}
+input:focus,select:focus{border-color:var(--accent)}
+.full{grid-column:1/-1}
+button{
+  font-family:'Press Start 2P',monospace;font-size:13px;
+  background:var(--good);color:var(--shadow);
+  border:none;box-shadow:4px 4px 0 var(--shadow);
+  padding:14px;cursor:pointer;width:100%;margin-top:14px;
+  transition:transform .05s;
+}
+button:hover{background:var(--accent)}
+button:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--shadow)}
+.result{font-size:22px;line-height:1.5}
+.route{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.city{
+  background:var(--panel2);border:3px solid var(--shadow);
+  padding:5px 10px;font-size:18px;color:var(--text);
+}
+.arrow{color:var(--accent);font-size:24px}
+.total{
+  font-family:'Press Start 2P',monospace;font-size:16px;color:var(--good);
+  text-shadow:2px 2px 0 var(--shadow);margin-top:12px;
+}
+.breakdown{font-size:19px;color:#a8c0ff;margin-top:6px}
+.err{color:var(--bad);font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.7}
+.hint{font-size:17px;color:#8b9bb4;margin-top:4px}
+details{margin-top:6px}
+summary{font-size:19px;color:var(--accent);cursor:pointer}
+.adj{font-size:18px;color:#c0c8e0;padding:3px 0;border-bottom:1px dashed #3b5dc9}
+.adj b{color:var(--accent)}
+.blink{animation:bk 1s steps(2) infinite}
+@keyframes bk{50%{opacity:0}}
+
+/* ===================== CARRO (sprite pixel-art 2DPixelCars #06) ===================== */
+.car{position:relative;width:134px;height:40px}
+.car .sprite{
+  display:block;width:100%;height:100%;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+}
+.car.rolling{animation:bounce .18s steps(2) infinite}
+@keyframes bounce{50%{transform:translateY(-2px)}}
+
+/* fumaça do escapamento */
+.smoke{position:absolute;left:-4px;bottom:2px;width:0;height:0}
+.smoke span{
+  position:absolute;width:9px;height:9px;
+  background:#c0c8e0;opacity:0;
+  box-shadow:3px -3px 0 #d7dcea,-3px 3px 0 #aeb6cf;  /* puff em blocos */
+}
+.car.rolling .smoke span{animation:puff .7s linear infinite}
+.car.rolling .smoke span:nth-child(2){animation-delay:.23s}
+.car.rolling .smoke span:nth-child(3){animation-delay:.46s}
+@keyframes puff{
+  0%{opacity:.7;transform:translate(0,0) scale(.5)}
+  100%{opacity:0;transform:translate(-26px,-16px) scale(1.7)}
+}
+
+/* ===================== TELA INICIAL ===================== */
+.start{
+  position:fixed;inset:0;z-index:50;
+  background:
+    radial-gradient(circle at 50% 30%,#3b2f6f 0,#1a1c2c 70%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;transition:opacity .5s ease;
+}
+.start.fade{opacity:0;pointer-events:none}
+.start-stars{
+  position:absolute;inset:0;opacity:.7;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%,#fff,transparent),
+    radial-gradient(1px 1px at 70% 20%,#fff,transparent),
+    radial-gradient(2px 2px at 40% 60%,#ffcd75,transparent),
+    radial-gradient(1px 1px at 85% 50%,#fff,transparent),
+    radial-gradient(1px 1px at 15% 75%,#9bd1ff,transparent),
+    radial-gradient(2px 2px at 60% 80%,#fff,transparent);
+  animation:twinkle 2s steps(2) infinite;
+}
+@keyframes twinkle{50%{opacity:.35}}
+.start-content{text-align:center;z-index:2;padding-bottom:60px}
+.start-title{
+  font-family:'Press Start 2P',monospace;font-size:34px;line-height:1.5;
+  color:var(--accent);
+  text-shadow:4px 4px 0 var(--bad),8px 8px 0 var(--shadow);
+  margin:0 0 14px;animation:floaty 2.2s ease-in-out infinite;
+}
+@keyframes floaty{50%{transform:translateY(-8px)}}
+.start-sub{font-size:26px;color:var(--road);letter-spacing:3px;margin-bottom:34px}
+.start-btn{
+  font-family:'Press Start 2P',monospace;font-size:18px;
+  background:var(--good);color:var(--shadow);
+  border:none;box-shadow:5px 5px 0 var(--shadow);
+  padding:18px 26px;cursor:pointer;width:auto;margin:0;
+}
+.start-btn:hover{background:var(--accent)}
+.start-tip{margin-top:22px;font-size:18px;color:#8b9bb4}
+.start.launching .start-content{animation:flicker .12s steps(2) 6}
+@keyframes flicker{50%{opacity:.2}}
+
+/* estrada da tela inicial + carro que cruza */
+.start-road{
+  position:absolute;left:0;right:0;bottom:0;height:90px;
+  background:
+    linear-gradient(var(--asphalt),var(--asphalt));
+  border-top:4px solid var(--shadow);overflow:hidden;
+}
+.start-road::before{                 /* faixa central tracejada */
+  content:"";position:absolute;top:50%;left:0;right:0;height:5px;
+  transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg,var(--accent) 0 28px,transparent 28px 56px);
+}
+.start-car{
+  position:absolute;bottom:20px;left:-200px;transform:scale(1.25);
+}
+.start.launching .start-car{animation:cross 1.5s ease-in forwards}
+@keyframes cross{
+  0%{left:-200px}
+  100%{left:110%}
+}
+
+/* ===================== FUMAÇA DE TELA (máscara da transição) ===================== */
+.smoke-screen{position:fixed;inset:0;z-index:60;pointer-events:none;display:none;overflow:hidden}
+.smoke-screen.active{display:block}
+.cloud{
+  position:absolute;width:18vmax;height:18vmax;background:#e6eaf4;
+  image-rendering:pixelated;opacity:0;transform:scale(.15);
+  will-change:transform,opacity;
+  /* nuvem pixel: blocos quadrados deslocados (sem curvas) */
+  box-shadow:
+     18vmax  3vmax 0 0 #dfe4f0,
+    -17vmax  0     0 0 #eef1f8,
+     2vmax -16vmax 0 0 #eef1f8,
+     5vmax  17vmax 0 0 #d7dcea,
+     20vmax -13vmax 0 0 #dfe4f0,
+    -15vmax 15vmax 0 0 #e6eaf4,
+    -33vmax 4vmax  0 0 #dfe4f0,
+     34vmax 14vmax 0 0 #e6eaf4;
+}
+.smoke-screen.active .cloud{animation:fog 1.7s ease-out forwards}
+.c1{left:-8vmax;top:-6vmax}
+.c2{right:-8vmax;top:-4vmax;animation-delay:.05s}
+.c3{left:18vmax;top:22vmax;animation-delay:.1s}
+.c4{right:16vmax;bottom:-6vmax;animation-delay:.08s}
+.c5{left:-6vmax;bottom:-8vmax;animation-delay:.14s}
+.c6{left:30vmax;top:-10vmax;animation-delay:.16s}
+@keyframes fog{
+  0%{opacity:0;transform:scale(.15)}
+  28%{opacity:.95;transform:scale(1.1)}
+  55%{opacity:1;transform:scale(1.7)}
+  100%{opacity:0;transform:scale(2.4)}
+}
+
+@media(max-width:560px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:13px}
+  .start-title{font-size:22px}
+  .start-sub{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important}
+}
