@@ -181,33 +181,33 @@ summary{font-size:19px;color:var(--accent);cursor:pointer}
 /* ===================== FUMAÇA DE TELA (máscara da transição) ===================== */
 .smoke-screen{position:fixed;inset:0;z-index:60;pointer-events:none;display:none;overflow:hidden}
 .smoke-screen.active{display:block}
+/* nuvem pixel pequena (rasterizada 1x) que cresce via transform:scale (GPU) */
 .cloud{
-  position:absolute;width:18vmax;height:18vmax;background:#e6eaf4;
-  image-rendering:pixelated;opacity:0;transform:scale(.15);
-  will-change:transform,opacity;
-  /* nuvem pixel: blocos quadrados deslocados (sem curvas) */
+  position:absolute;width:46px;height:30px;opacity:0;
+  background:#e9edf6;transform:scale(.4);transform-origin:center;
+  image-rendering:pixelated;will-change:transform,opacity;
+  /* blocos em px = bounding box pequeno, sem repintura cara */
   box-shadow:
-     18vmax  3vmax 0 0 #dfe4f0,
-    -17vmax  0     0 0 #eef1f8,
-     2vmax -16vmax 0 0 #eef1f8,
-     5vmax  17vmax 0 0 #d7dcea,
-     20vmax -13vmax 0 0 #dfe4f0,
-    -15vmax 15vmax 0 0 #e6eaf4,
-    -33vmax 4vmax  0 0 #dfe4f0,
-     34vmax 14vmax 0 0 #e6eaf4;
+    -34px  4px 0 0 #dfe4f0,
+     34px  2px 0 0 #eef1f8,
+     4px -22px 0 0 #eef1f8,
+     8px  20px 0 0 #d7dcea,
+    -58px 10px 0 0 #dfe4f0,
+     58px 12px 0 0 #e3e7f2,
+     0px  26px 0 0 #d2d8e8;
 }
-.smoke-screen.active .cloud{animation:fog 1.7s ease-out forwards}
-.c1{left:-8vmax;top:-6vmax}
-.c2{right:-8vmax;top:-4vmax;animation-delay:.05s}
-.c3{left:18vmax;top:22vmax;animation-delay:.1s}
-.c4{right:16vmax;bottom:-6vmax;animation-delay:.08s}
-.c5{left:-6vmax;bottom:-8vmax;animation-delay:.14s}
-.c6{left:30vmax;top:-10vmax;animation-delay:.16s}
+.smoke-screen.active .cloud{animation:fog 1.6s ease-out forwards}
+.c1{left:14%;top:30%}
+.c2{left:60%;top:24%;animation-delay:.06s}
+.c3{left:38%;top:54%;animation-delay:.12s}
+.c4{left:78%;top:60%;animation-delay:.09s}
+.c5{left:6%;top:70%;animation-delay:.15s}
+.c6{left:50%;top:8%;animation-delay:.18s}
 @keyframes fog{
-  0%{opacity:0;transform:scale(.15)}
-  28%{opacity:.95;transform:scale(1.1)}
-  55%{opacity:1;transform:scale(1.7)}
-  100%{opacity:0;transform:scale(2.4)}
+  0%{opacity:0;transform:scale(.4)}
+  28%{opacity:1;transform:scale(7)}
+  58%{opacity:1;transform:scale(16)}
+  100%{opacity:0;transform:scale(22)}
 }
 
 @media(max-width:560px){
