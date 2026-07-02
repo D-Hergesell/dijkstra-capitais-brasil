@@ -18,9 +18,14 @@ export function buscarCaminhoMaisBarato(grafo, origem, destino, precoComb, auton
 
   for (const v of grafo.vertices()) dist.set(v, Infinity);
   dist.set(origem, 0);
+  //Caso precise contar a origem também, trocar o código acima por:
+  //const pedagioOrigem = grafo.pedagio(origem);
+  //dist.set(origem, pedagioOrigem);
 
   const heap = new MinHeap();
   heap.push({ custo: 0, no: origem });
+  //Esse também por:
+  //heap.push({ custo: pedagioOrigem, no: origem });
 
   while (heap.size) {
     const { custo, no } = heap.pop();
@@ -49,6 +54,8 @@ export function buscarCaminhoMaisBarato(grafo, origem, destino, precoComb, auton
 // Detalha o gasto de uma rota já encontrada (km, combustível, pedágios).
 export function detalharGasto(grafo, caminho, precoComb, autonomia) {
   let km = 0, pedagios = 0;
+  //Caso as mudanças mencionadas na linha 21 sejam aplicadas, trocar o código acima por:
+  //let km = 0, pedagios = grafo.pedagio(caminho[0]);
   for (let i = 0; i < caminho.length - 1; i++) {
     km += grafo.vizinhos(caminho[i]).get(caminho[i + 1]);
     pedagios += grafo.pedagio(caminho[i + 1]);
