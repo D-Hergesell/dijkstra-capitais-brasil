@@ -3,6 +3,7 @@
 
 import { seed } from '../data/capitaisRepository.js';
 import { buscarCaminhoMaisBarato, detalharGasto } from '../service/rotaService.js';
+import { audio } from './audio.js';
 
 const $ = (id) => document.getElementById(id);
 const brl = (n) =>
@@ -22,18 +23,50 @@ function iniciarJogo() {
   const start = $('startScreen');
   const car = $('startCar');
   if (start.classList.contains('launching')) return;
+  start.classList.remove('tvon-start');
   car.classList.add('rolling');
   start.classList.add('launching');
+  audio.ficha();
+  audio.motor(1.5);
 
   // 1) carro cruza a tela (~1.5s); quando ele já saiu, a imagem do CRT
   //    colapsa numa linha brilhante e apaga (tvoff, .55s)
-  setTimeout(() => start.classList.add('tvoff'), 1300);
-  // 2) a TV religa já mostrando o menu: expande da mesma linha (tvon)
+  setTimeout(() => {
+    start.classList.add('tvoff');
+    audio.pararMusica();
+    audio.zap();
+  }, 1300);
+  // 2) a TV religa já mostrando o menu: expande da mesma linha (tvon).
+  //    A tela inicial fica escondida (não destruída) para o "voltar" reusá-la.
   setTimeout(() => {
     $('app').classList.remove('app-hidden');
     $('app').classList.add('app-reveal');
-    start.remove();
+    start.classList.add('start-hidden');
+    start.classList.remove('launching', 'tvoff');
+    car.classList.remove('rolling');
+    $('backBtn').classList.add('show');
+    audio.tocarMusica('menu');
   }, 1850);
+}
+
+// ---- Voltar à tela inicial: o menu "desliga" e a TV religa no título ----
+function voltarInicio() {
+  const app = $('app');
+  const start = $('startScreen');
+  if (app.classList.contains('tvoff-app') || app.classList.contains('app-hidden')) return;
+  audio.pararMusica();
+  audio.zap();
+  $('backBtn').classList.remove('show');
+  app.classList.remove('app-reveal');
+  app.classList.add('tvoff-app');
+  setTimeout(() => {
+    app.classList.add('app-hidden');
+    app.classList.remove('tvoff-app');
+    start.classList.remove('start-hidden');
+    start.classList.add('tvon-start');
+    audio.tocarMusica('title');
+    setTimeout(() => start.classList.remove('tvon-start'), 700);
+  }, 550);
 }
 
 // SHOW: exibe vértices e seus adjacentes.
@@ -70,6 +103,7 @@ function animarTotal(el, total) {
 function renderErro(msg) {
   popResultWin();
   $('result').innerHTML = `<div class="err">${msg}</div>`;
+  audio.erro();
 }
 
 function buscar() {
@@ -103,6 +137,7 @@ function buscar() {
     <div class="breakdown">⛽ Combustível: ${brl(g.combustivel)} &nbsp;(${g.litros.toFixed(1)} L)</div>
     <div class="breakdown">🛣️ Pedágios: ${brl(g.pedagios)}</div>
     <div class="total">💰 TOTAL: <span id="totalVal">${brl(0)}</span></div>`;
+  audio.jingle();
   animarTotal($('totalVal'), r.total);
 }
 
@@ -110,12 +145,46 @@ function montarCenario() {
   // injeta o sprite do carro da tela inicial
   $('startCar').innerHTML = carHTML();
 
-  // START: clique, Enter ou Espaço
+  // Áudio só pode nascer/retomar num gesto do usuário (política de autoplay).
+  // Os listeners ficam ativos SEMPRE: após um F5 o browser exige novo gesto,
+  // e se o contexto renascer suspenso o próximo clique/tecla o retoma.
+  const gestoAudio = () => {
+    audio.unlock();
+    const start = $('startScreen');
+    const naTelaInicial = start &&
+      !start.classList.contains('start-hidden') &&
+      !start.classList.contains('launching');
+    if (naTelaInicial && !audio.tocando()) audio.tocarMusica('title');
+  };
+  document.addEventListener('pointerdown', gestoAudio);
+  document.addEventListener('keydown', gestoAudio);
+
+  // botão de som (♪): alterna mute e persiste a escolha
+  const snd = $('sndBtn');
+  const rotular = () => {
+    snd.textContent = audio.mudo ? '♪ OFF' : '♪ ON';
+    snd.classList.toggle('off', audio.mudo);
+  };
+  rotular();
+  snd.addEventListener('click', () => {
+    audio.alternarMudo();
+    rotular();
+    audio.blip();                 // só audível quando acabou de LIGAR
+  });
+
+  // VOLTAR: botão no topo esquerdo (ou tecla Esc no menu)
+  $('backBtn').addEventListener('click', voltarInicio);
+
+  // START: clique, Enter ou Espaço (só com a tela inicial visível)
   $('startBtn').addEventListener('click', iniciarJogo);
   document.addEventListener('keydown', (e) => {
-    if ($('startScreen') && (e.key === 'Enter' || e.key === ' ')) {
+    const start = $('startScreen');
+    const naTelaInicial = start && !start.classList.contains('start-hidden');
+    if (naTelaInicial && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       iniciarJogo();
+    } else if (!naTelaInicial && e.key === 'Escape') {
+      voltarInicio();
     }
   });
 }
