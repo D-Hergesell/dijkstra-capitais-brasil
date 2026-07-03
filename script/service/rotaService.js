@@ -5,9 +5,11 @@ import { MinHeap } from '../domain/MinHeap.js';
 
 // Custo de percorrer a aresta u->v:
 //   combustível = (distância / autonomia) * preçoCombustível
-//   pedágio     = pedágio da capital v (pago ao CHEGAR; o da origem não conta)
-function custoAresta(km, pedagioDestino, precoComb, autonomia) {
-  return (km / autonomia) * precoComb + pedagioDestino;
+//   pedágio     = pedágio da capital v (pago ao CHEGAR)
+// Só se paga pedágio ao chegar em capitais de PASSAGEM: nem a origem
+// (não se "chega" nela) nem o destino final entram na conta.
+function custoAresta(km, pedagioChegada, precoComb, autonomia) {
+  return (km / autonomia) * precoComb + pedagioChegada;
 }
 
 // Dijkstra com Min-Heap. Retorna { caminho:[], total:Number } ou null se não houver rota.
@@ -35,7 +37,9 @@ export function buscarCaminhoMaisBarato(grafo, origem, destino, precoComb, auton
 
     for (const [vizinho, km] of grafo.vizinhos(no)) {
       if (visto.has(vizinho)) continue;
-      const novo = custo + custoAresta(km, grafo.pedagio(vizinho), precoComb, autonomia);
+      // O pedágio do destino final não é cobrado (só o de capitais de passagem).
+      const pedagioChegada = vizinho === destino ? 0 : grafo.pedagio(vizinho);
+      const novo = custo + custoAresta(km, pedagioChegada, precoComb, autonomia);
       if (novo < dist.get(vizinho)) {
         dist.set(vizinho, novo);
         prev.set(vizinho, no);
@@ -54,11 +58,11 @@ export function buscarCaminhoMaisBarato(grafo, origem, destino, precoComb, auton
 // Detalha o gasto de uma rota já encontrada (km, combustível, pedágios).
 export function detalharGasto(grafo, caminho, precoComb, autonomia) {
   let km = 0, pedagios = 0;
-  //Caso as mudanças mencionadas na linha 21 sejam aplicadas, trocar o código acima por:
-  //let km = 0, pedagios = grafo.pedagio(caminho[0]);
+  const destino = caminho[caminho.length - 1];
   for (let i = 0; i < caminho.length - 1; i++) {
     km += grafo.vizinhos(caminho[i]).get(caminho[i + 1]);
-    pedagios += grafo.pedagio(caminho[i + 1]);
+    // Pedágio só das capitais de passagem: origem e destino final não contam.
+    if (caminho[i + 1] !== destino) pedagios += grafo.pedagio(caminho[i + 1]);
   }
   const litros = km / autonomia;
   return { km, litros, combustivel: litros * precoComb, pedagios };

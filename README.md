@@ -21,9 +21,13 @@ Custo de percorrer a aresta `u → v`:
 
 ```
 combustível = (distância_km / autonomia) * preço_combustível
-pedágio     = pedágio da capital de destino (o da origem não conta)
+pedágio     = pedágio da capital v (pago ao CHEGAR)
 custo       = combustível + pedágio
 ```
+
+O pedágio é cobrado só nas capitais **de passagem**: nem a origem (não se
+"chega" nela) nem o destino final entram na conta — apenas as paradas
+intermediárias do trajeto.
 
 ## 🏗️ Arquitetura
 
