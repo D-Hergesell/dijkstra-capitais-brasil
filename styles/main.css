@@ -78,7 +78,7 @@ h1{
   text-shadow:3px 3px 0 var(--bad),6px 6px 0 var(--shadow);
   margin:10px 0 4px;
 }
-.sub{font-size:22px;color:var(--road);letter-spacing:2px;margin-bottom:18px}
+.sub{font-size:22px;color:var(--road);letter-spacing:2px;margin:0 0 18px}
 .window{
   background:var(--panel);
   border:4px solid var(--shadow);
@@ -108,7 +108,7 @@ h1{
 .dots .r{background:var(--bad)} .dots .y{background:var(--accent)} .dots .g{background:var(--good)}
 .body{padding:16px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-label{display:block;font-size:20px;color:var(--accent);margin-bottom:4px}
+label{display:flex;flex-direction:column;gap:4px;font-size:20px;color:var(--accent)}
 input,select{
   width:100%;font-family:'VT323',monospace;font-size:20px;
   background:var(--bg);color:var(--text);
@@ -135,7 +135,7 @@ button:active{
   transform:translate(4px,4px);box-shadow:0 0 0 var(--shadow);
   border-color:#1d7a41 #5fd88a #5fd88a #1d7a41;
 }
-.result{font-size:22px;line-height:1.5}
+.result{display:block;font-size:22px;line-height:1.5}
 .route{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
 .city{
   background:var(--panel2);border:3px solid var(--shadow);
@@ -327,14 +327,14 @@ summary:hover{color:#ffe6b0}
 }
 @keyframes floaty{50%{transform:translateY(-8px)}}
 .start-sub{
-  font-size:26px;color:var(--road);letter-spacing:3px;margin-bottom:34px;
+  font-size:26px;color:var(--road);letter-spacing:3px;margin:0 0 34px;
   text-shadow:2px 2px 0 var(--shadow);
 }
 .start-btn{
   font-family:'Press Start 2P',monospace;font-size:18px;
   padding:16px 26px;cursor:pointer;width:auto;margin:0;
 }
-.start-tip{margin-top:22px;font-size:18px;color:#b9c2d8;text-shadow:1px 1px 0 var(--shadow)}
+.start-tip{margin:22px 0 0;font-size:18px;color:#b9c2d8;text-shadow:1px 1px 0 var(--shadow)}
 .start.launching .start-content{animation:flicker .12s steps(2) 6}
 @keyframes flicker{50%{opacity:.2}}
 

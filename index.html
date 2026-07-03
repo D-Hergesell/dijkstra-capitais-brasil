@@ -18,9 +18,9 @@
     <div class="start-skyline"></div>
     <div class="start-content">
       <h1 class="start-title">CAMINHO<br>MAIS&nbsp;BARATO</h1>
-      <div class="start-sub">★ CAPITAIS DO BRASIL ★</div>
+      <p class="start-sub">★ CAPITAIS DO BRASIL ★</p>
       <button id="startBtn" class="start-btn blink">▶ PRESS START ◀</button>
-      <div class="start-tip">insira a ficha e acelere!</div>
+      <p class="start-tip">insira a ficha e acelere!</p>
     </div>
     <div class="start-road">
       <!-- carro que cruza a tela ao apertar start -->
@@ -31,51 +31,47 @@
   <!-- ===== MENU (revelado após o start) ===== -->
   <main id="app" class="app-hidden">
     <h1>CAMINHO MAIS BARATO</h1>
-    <div class="sub blink">▶ CAPITAIS DO BRASIL ◀</div>
+    <p class="sub blink">▶ CAPITAIS DO BRASIL ◀</p>
 
     <!-- BUSCA -->
-    <div class="window">
-      <div class="titlebar"><span>ROTA.EXE</span><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+    <section class="window">
+      <header class="titlebar"><span>ROTA.EXE</span><span class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></span></header>
       <div class="body">
         <div class="grid">
-          <div>
-            <label>◆ ORIGEM</label>
+          <label>◆ ORIGEM
             <input id="origem" list="caps" placeholder="Selecione a capital...">
-          </div>
-          <div>
-            <label>◆ DESTINO</label>
+          </label>
+          <label>◆ DESTINO
             <input id="destino" list="caps" placeholder="Selecione a capital...">
-          </div>
-          <div>
-            <label>⛽ COMBUSTÍVEL R$/L</label>
+          </label>
+          <label>⛽ COMBUSTÍVEL R$/L
             <input id="fuel" type="number" step="0.01" min="0" value="5.89">
-          </div>
-          <div>
-            <label>🚗 AUTONOMIA km/L</label>
+          </label>
+          <label>🚗 AUTONOMIA km/L
             <input id="auton" type="number" step="0.1" min="0.1" value="12">
-          </div>
+          </label>
         </div>
         <datalist id="caps"></datalist>
-        <button id="go">► CALCULAR ROTA ◄</button>
+        <button id="go" type="button">► CALCULAR ROTA ◄</button>
       </div>
-    </div>
+    </section>
 
     <!-- RESULTADO -->
-    <div class="window" id="resWin" style="display:none">
-      <div class="titlebar"><span>RESULTADO.LOG</span><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
-      <div class="body"><div id="result" class="result"></div></div>
-    </div>
+    <section class="window" id="resWin" hidden>
+      <header class="titlebar"><span>RESULTADO.LOG</span><span class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></span></header>
+      <div class="body"><output id="result" class="result"></output></div>
+    </section>
 
     <!-- GRAFO -->
-    <div class="window">
-      <div class="titlebar"><span>GRAFO.DAT</span><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+    <section class="window">
+      <header class="titlebar"><span>GRAFO.DAT</span><span class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></span></header>
       <div class="body">
         <details>
           <summary> Mostrar vértices e adjacências (Show)</summary>
           <div id="show" style="margin-top:10px"></div>
         </details>
       </div>
-    </div>
+    </section>
   </main>
 
   <!-- ===== Overlay CRT (scanlines + vinheta) ===== -->

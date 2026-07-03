@@ -82,7 +82,7 @@ function renderShow(grafo, caps) {
 // Reexibe a janela de resultado com o "pop" pixelado (reinicia a animação).
 function popResultWin() {
   const win = $('resWin');
-  win.style.display = 'block';
+  win.hidden = false;
   win.classList.remove('win-pop');
   void win.offsetWidth;
   win.classList.add('win-pop');
