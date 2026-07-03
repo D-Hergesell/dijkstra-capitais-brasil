@@ -13,6 +13,7 @@ algoritmo de Dijkstra encontra o trajeto que minimiza o gasto total em R$.
 - Custo parametrizável: **preço do combustível** e **autonomia** do veículo.
 - Detalhamento do gasto: km percorridos, litros, combustível e pedágios.
 - Interface pixel-art com animação de carro e transição estilo TV de tubo (CRT).
+- Trilha sonora e efeitos chiptune 16-bits sintetizados via Web Audio API (sem assets de áudio).
 
 ## 🗺️ Modelo de custo
 

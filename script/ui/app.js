@@ -3,6 +3,7 @@
 
 import { seed } from '../data/capitaisRepository.js';
 import { buscarCaminhoMaisBarato, detalharGasto } from '../service/rotaService.js';
+import { audio } from './audio.js';
 
 const $ = (id) => document.getElementById(id);
 const brl = (n) =>
@@ -24,15 +25,22 @@ function iniciarJogo() {
   if (start.classList.contains('launching')) return;
   car.classList.add('rolling');
   start.classList.add('launching');
+  audio.ficha();
+  audio.motor(1.5);
 
   // 1) carro cruza a tela (~1.5s); quando ele já saiu, a imagem do CRT
   //    colapsa numa linha brilhante e apaga (tvoff, .55s)
-  setTimeout(() => start.classList.add('tvoff'), 1300);
+  setTimeout(() => {
+    start.classList.add('tvoff');
+    audio.pararMusica();
+    audio.zap();
+  }, 1300);
   // 2) a TV religa já mostrando o menu: expande da mesma linha (tvon)
   setTimeout(() => {
     $('app').classList.remove('app-hidden');
     $('app').classList.add('app-reveal');
     start.remove();
+    audio.tocarMusica('menu');
   }, 1850);
 }
 
@@ -70,6 +78,7 @@ function animarTotal(el, total) {
 function renderErro(msg) {
   popResultWin();
   $('result').innerHTML = `<div class="err">${msg}</div>`;
+  audio.erro();
 }
 
 function buscar() {
@@ -103,12 +112,37 @@ function buscar() {
     <div class="breakdown">⛽ Combustível: ${brl(g.combustivel)} &nbsp;(${g.litros.toFixed(1)} L)</div>
     <div class="breakdown">🛣️ Pedágios: ${brl(g.pedagios)}</div>
     <div class="total">💰 TOTAL: <span id="totalVal">${brl(0)}</span></div>`;
+  audio.jingle();
   animarTotal($('totalVal'), r.total);
 }
 
 function montarCenario() {
   // injeta o sprite do carro da tela inicial
   $('startCar').innerHTML = carHTML();
+
+  // Áudio só pode nascer num gesto do usuário (política de autoplay).
+  // O primeiro clique/tecla destrava o contexto e liga o tema do título.
+  const primeiroGesto = () => {
+    audio.unlock();
+    if ($('startScreen')) audio.tocarMusica('title');
+    document.removeEventListener('pointerdown', primeiroGesto);
+    document.removeEventListener('keydown', primeiroGesto);
+  };
+  document.addEventListener('pointerdown', primeiroGesto);
+  document.addEventListener('keydown', primeiroGesto);
+
+  // botão de som (♪): alterna mute e persiste a escolha
+  const snd = $('sndBtn');
+  const rotular = () => {
+    snd.textContent = audio.mudo ? '♪ OFF' : '♪ ON';
+    snd.classList.toggle('off', audio.mudo);
+  };
+  rotular();
+  snd.addEventListener('click', () => {
+    audio.alternarMudo();
+    rotular();
+    audio.blip();                 // só audível quando acabou de LIGAR
+  });
 
   // START: clique, Enter ou Espaço
   $('startBtn').addEventListener('click', iniciarJogo);
