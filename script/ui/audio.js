@@ -57,15 +57,23 @@ class ArcadeAudio {
     this.trackBus = null;
   }
 
+  // A música de fundo está ativa?
+  tocando() {
+    return !!this.trackBus;
+  }
+
   // Deve ser chamado dentro de um gesto do usuário (click/tecla).
+  // Idempotente: pode (e deve) ser chamado a cada gesto — depois de um F5
+  // o browser pode recriar/manter o contexto suspenso até novo gesto.
   unlock() {
     if (this.ctx) {
-      if (this.ctx.state === 'suspended') this.ctx.resume();
+      if (this.ctx.state !== 'running') this.ctx.resume();
       return;
     }
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return;                              // sem suporte: app segue mudo
     this.ctx = new Ctx();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
     this.master = this.ctx.createGain();
     this.master.gain.value = this.mudo ? 0 : 1;
     this.master.connect(this.ctx.destination);
@@ -250,3 +258,5 @@ class ArcadeAudio {
 }
 
 export const audio = new ArcadeAudio();
+// handle de depuração no console (ex.: arcadeAudio.ctx.state)
+window.arcadeAudio = audio;

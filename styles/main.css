@@ -48,6 +48,18 @@ body{
 .snd-btn:hover{background:var(--road);border-color:#8fc4fa #1c5c94 #1c5c94 #8fc4fa}
 .snd-btn.off{background:var(--asphalt);color:#8b9bb4;border-color:#3a405c #14161f #14161f #3a405c}
 
+/* botão de voltar à tela inicial — só aparece no menu */
+.back-btn{
+  position:fixed;left:14px;top:14px;z-index:110;
+  width:auto;margin:0;padding:10px 12px;font-size:10px;
+  background:var(--bad);color:var(--shadow);
+  border-color:#ffb08e #8f3a20 #8f3a20 #ffb08e;
+  box-shadow:3px 3px 0 var(--shadow);
+  display:none;
+}
+.back-btn.show{display:block}
+.back-btn:hover{background:var(--accent);border-color:#ffe6b0 #bf8a45 #bf8a45 #ffe6b0}
+
 /* ===================== MENU ===================== */
 #app{display:flex;flex-direction:column;align-items:center;width:100%}
 #app.app-hidden{display:none}   /* especificidade > #app, senão o display:flex vence */
@@ -235,6 +247,17 @@ summary:hover{color:#ffe6b0}
   55%{transform:scaleY(.006) scaleX(1);filter:brightness(3.5)}
   82%{transform:scaleY(.006) scaleX(.05);filter:brightness(7);opacity:1}
   100%{transform:scaleY(.006) scaleX(.002);filter:brightness(7);opacity:0}
+}
+
+/* tela inicial escondida (não destruída) para o "voltar" reusá-la */
+.start.start-hidden{display:none}
+/* TV religando na tela inicial (caminho de volta do menu) */
+.start.tvon-start{animation:tvon .6s cubic-bezier(0,.6,.3,1) both}
+/* menu "desligando" ao voltar — mesmo colapso do tvoff */
+.tvoff-app{
+  animation:tvoff .55s cubic-bezier(.7,0,1,1) forwards;
+  transform-origin:50% 50vh;
+  pointer-events:none;
 }
 .start-stars{
   position:absolute;top:0;left:0;right:0;bottom:45%;z-index:0;opacity:.7;
